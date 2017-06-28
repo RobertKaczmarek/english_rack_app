@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-gem 'fast_trie'
 gem 'json'
-gem 'pg'
+gem 'open-uri-cached'
 gem 'rack'
-
+gem 'rack-cache'
+gem 'rack-test'
+gem 'rspec'
+gem 'trie'
 
 # gem "rails"
