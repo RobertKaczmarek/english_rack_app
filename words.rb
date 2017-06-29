@@ -6,7 +6,7 @@ class WordsFromDict
 
   def self.dict
     if File.exists?('dict')
-      File.open('dict', 'rb') do |f|
+      File.open('/tmp/dict', 'rb') do |f|
         file = f.read
         file.each_line do |line|
           line.delete!("\n")
@@ -23,7 +23,7 @@ class WordsFromDict
           end
         end
 
-      File.open('dict', 'wb') do |f|
+      File.open('/tmp/dict', 'wb') do |f|
         @words.each { |k, v| f.write("#{k.join} #{v}\n") }
         end
     end

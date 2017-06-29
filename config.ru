@@ -1,11 +1,25 @@
 require './pronounce'
 require './suggest'
+require './words'
 
 
-map '/pronounce' do
-  run Pronounce
+class EnglishApp
+  def self.app
+    @app ||= begin
+      Rack::Builder.new do
+        words ||= WordsFromDict.dict
+
+        map '/pronounce' do
+          run Pronounce.new(words)
+        end
+
+        map '/suggest' do
+          run Suggest.new(words)
+        end
+      end
+    end
+  end
 end
 
-map '/suggest' do
-  run Suggest
-end
+
+run EnglishApp.app

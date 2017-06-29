@@ -2,8 +2,6 @@ require './pronounce'
 require './suggest'
 require 'rack/test'
 require 'rspec'
-require 'open-uri/cached'
-
 
 
 describe 'the app' do
@@ -11,8 +9,7 @@ describe 'the app' do
 
   def app
     Rack::Builder.new do
-      words = Trie.new
-      words.insert("a", 'AH0')
+      words = Trie.new.insert('a', 'AH0')
       for i in 0..9
         words.insert("a(2)#{i}", 'smt')
       end
@@ -23,14 +20,22 @@ describe 'the app' do
 
       map '/suggest' do
         run Suggest.new(words)
-        end
+      end
     end.to_app
   end
 
-  context 'get to /pronounce' do
-    it 'returns the status 200' do
+
+  context '/pronounce' do
+    before do
       get '/pronounce'
+    end
+
+    it 'returns the status 200' do
       expect(last_response.status).to eq 200
+    end
+
+    it 'returns json' do
+      expect(last_response.header).to include('Content-Type' => 'application/json')
     end
 
     it 'returns pronunciation' do
@@ -39,10 +44,17 @@ describe 'the app' do
     end
   end
 
-  context 'get to /suggest' do
-    it 'returns the status 200' do
+  context '/suggest' do
+    before do
       get '/suggest'
+    end
+
+    it 'returns the status 200' do
       expect(last_response.status).to eq 200
+    end
+
+    it 'returns json' do
+      expect(last_response.header).to include('Content-Type' => 'application/json')
     end
 
     it 'returns 10 words' do

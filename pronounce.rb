@@ -1,15 +1,17 @@
-require './words'
 require 'json'
 require 'trie'
 
 class Pronounce
+  def initialize(words)
+    @trie = words
+  end
 
   def call(env)
-    @trie ||= WordsFromDict.dict
-
-  req = Rack::Request.new(env)
+    req = Rack::Request.new(env)
 
     word = req.path_info.gsub('/', '').to_s
-    [200, { 'Content-Type' => 'application/json' }, [{ "#{word}": @trie.find("#{word}").values }.to_json] ]
+    pronunciation = @trie.find(word).values.join
+    hash = { word: "#{word}", pronunciation: "#{pronunciation}"}
+    [200, { 'Content-Type' => 'application/json' }, [hash.to_json] ]
   end
 end
